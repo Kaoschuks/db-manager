@@ -78,6 +78,46 @@ export class DbProvider {
     });
   }// select
 
+
+  /**
+   *
+   * @param p.tableName: name of table
+   * @param p.customColumns: list of columns to select
+   * @param p.custom: custom clause
+   * @param p.orderBy: order by
+   * @returns {Promise<T>}
+   */
+  selectCustom(p: {tableName: string, customColumns?: string, custom?: string, orderBy?: string}) {
+
+    if(p.customColumns == undefined)
+      p.customColumns = '*';
+    if(p.custom == undefined)
+      p.custom = '';
+    var query = "SELECT " +p.customColumns+ " FROM " + p.tableName + " " + p.custom;
+    if(p.orderBy != undefined)
+      query += ' ORDER BY ' + p.orderBy;
+
+    console.log('query selectFiltred : ',query);
+    return new Promise((resolve, reject) => {
+      this._db.transaction(function (tx) {
+        tx.executeSql(query, [], function (tx, data) {
+          let item: Object;
+          let res: Object[] = [];
+
+          for (var i = 0; i < data.rows.length; i++) {
+            item = data.rows.item(i);
+            res.push(item);
+          }
+
+          resolve(res);
+        }, function (tx, error) {
+          reject(error);
+        });
+      });
+    });
+  }// selectCustom
+
+
   /**
    * Generic function to execute any query
    * @param query
