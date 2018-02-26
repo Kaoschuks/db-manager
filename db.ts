@@ -118,6 +118,53 @@ export class DbProvider {
   }// selectCustom
 
 
+  /***************************** INSERT *******************************/
+
+  /**
+   *
+   * @param p.tableName: name of table
+   * @param p.obj: object
+   * @param p.ignore: list attributes of object to ignore
+   * @returns {Promise<T>}
+   */
+  insert(p: {tableName: string, obj: any, ignore?: string[]}) {
+    if(p.ignore == undefined)
+      p.ignore = [];
+
+    var query = " INSERT INTO " + p.tableName;
+    var fields = ' (';
+    var values = ' (';
+    var params = [];
+    let i = 1;
+    for (const field in p.obj) {
+      if(!this.contains(p.ignore, field)){
+        if (i++ == 1) {
+          fields += "" + field;
+          values += "?";
+        }else{
+          fields += ", " + field;
+          values += ", ?";
+        }
+        params.push(p.obj[field]);
+      }
+    }
+    fields += ')';
+    values += ')';
+    query += fields + ' VALUES' + values;
+    console.log('query: ', query);
+
+    return new Promise((resolve, reject) => {
+      this._db.transaction(function (tx) {
+        tx.executeSql(query, params, function (tx, data) {
+          resolve(data)
+        }, (tx, err) => {
+          reject(err)
+        });//executeSql
+      });//transaction
+    });//promise
+  }// insert
+
+
   /**
    * Generic function to execute any query
    * @param query
