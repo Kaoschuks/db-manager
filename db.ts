@@ -165,6 +165,64 @@ export class DbProvider {
   }// insert
 
 
+
+  /**
+   *
+   * @param p.tableName: name of table
+   * @param p.obj: object
+   * @param p.colRef: name of columns to verify if not exists
+   * @param p.colVal: values of columns to verify if not exists
+   * @param p.ignore: ignored attributes
+   * @returns {Promise<T>}
+   */
+  insertIfNotExists(p: {tableName: string, obj: any, colsRef: string[], colsVal: any[], ignore?: string[]}) {
+    if(p.ignore == undefined)
+      p.ignore = [];
+
+    var query = " INSERT INTO " + p.tableName;
+    var fields = ' (';
+    var values = ' SELECT ';
+    var where = ' ';
+    var params = [];
+    let i = 1;
+    for (const field in p.obj) {
+      if(!this.contains(p.ignore, field)){
+        if (i++ == 1) {
+          fields += "" + field;
+          values += "?";
+        }else{
+          fields += ", " + field;
+          values += ", ?";
+        }
+        params.push(p.obj[field]);
+      }
+    }
+    fields += ')';
+    values += ' ';
+    where += 'WHERE NOT EXISTS (SELECT 1 FROM ' + p.tableName + ' WHERE ';
+    let j = 0;
+    for (j = 0; j < (p.colsRef.length - 1); j++) {
+      where +=  p.colsRef[j] +' = ? AND ';
+      params.push(p.colsVal[j]);
+    }
+    where += p.colsRef[j] +' = ?)';
+    params.push(p.colsVal[j]);
+    query += fields + values + where;
+
+    console.log('query insertIfNotExists2 : ', query);
+
+    return new Promise((resolve, reject) => {
+      this._db.transaction(function (tx) {
+        tx.executeSql(query, params, function (tx, data) {
+          resolve(data)
+        }, (tx, err) => {
+          reject(err)
+        });//executeSql
+      });//transaction
+    });//promise
+  }// insertIfNotExists
+
+
   /**
    * Generic function to execute any query
    * @param query
