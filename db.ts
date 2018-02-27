@@ -325,6 +325,49 @@ export class DbProvider {
 
   }// updateOnly
 
+  /**
+   *
+   * @param p.tableName: name of table
+   * @param p.obj: object
+   * @param p.customWhere: custom query where
+   * @param p.ignore: list attributes of object to ignore
+   * @returns {Promise<T>}
+   */
+  updateCustom(p:{tableName: string, obj: any, customWhere: string, ignore?: string[]}) {
+
+    if(p.ignore == undefined)
+      p.ignore = [];
+    var query = " UPDATE " + p.tableName + " SET ";
+    var fields = ' ';
+    var params = [];
+    let i = 1;
+    for (const field in p.obj) {
+      if(!this.contains(p.ignore, field)){
+        if (i++ == 1) {
+          fields += "" + field + " ? ";
+        }else{
+          fields += ", " + field + " ? ";
+        }
+        params.push(p.obj[field]);
+      }
+    }
+    fields += '';
+
+    query += fields + ' ' + p.customWhere;
+    console.log('query updateCustom : ', query);
+
+    return new Promise((resolve, reject) => {
+      this._db.transaction(function (tx) {
+        tx.executeSql(query, params, function (tx, data) {
+          resolve(data)
+        }, function (tx, error) {
+          reject(error)
+        });//executeSql
+      });//transaction
+    });//promise
+
+  }// updateCustom
+
   /***************************** OTHERS *******************************/
   /**
    * Generic function to execute any query
