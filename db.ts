@@ -223,6 +223,58 @@ export class DbProvider {
   }// insertIfNotExists
 
 
+  /***************************** UPDATE *******************************/
+
+  /**
+   *
+   * @param p.tableName: name of table
+   * @param p.obj: object
+   * @param p.column: name of column
+   * @param p.operator: operator to use '=', '!=', '<', '<=' ...
+   * @param p.value: value to compare
+   * @param p.ignore: list attributes of object to ignore
+   * @returns {Promise<T>}
+   */
+  updateOnly(p:{tableName: string, columns: string[], values: any[], column?: string, operator?: string, value?: any }) {
+
+    if(p.operator == undefined)
+      p.operator = ' = ';
+
+    var query = " UPDATE " + p.tableName + " SET ";
+    var fields = ' ';
+    var params = [];
+    var where = '';
+    let i = 1;
+    for (const key in p.columns) {
+
+      if (i++ == 1) {
+        fields += "" + p.columns[key] + " = ? ";
+      }else{
+        fields += ", " + p.columns[key] + " = ? ";
+      }
+      params.push(p.values[key]);
+
+    }
+    fields += '';
+    if(p.column != undefined && p.value != undefined){
+      where += ' WHERE ' + p.column + ' ' + p.operator + ' ' + p.value;
+    }
+    query += fields + ' ' + where;
+    console.log('query update only : ', query);
+
+    return new Promise((resolve, reject) => {
+      this._db.transaction(function (tx) {
+        tx.executeSql(query, params, function (tx, data) {
+          resolve(data)
+        }, function (tx, error) {
+          reject(error)
+        });//executeSql
+      });//transaction
+    });//promise
+
+  }// updateOnly
+
+  /***************************** OTHERS *******************************/
   /**
    * Generic function to execute any query
    * @param query
