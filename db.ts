@@ -235,6 +235,57 @@ export class DbProvider {
    * @param p.ignore: list attributes of object to ignore
    * @returns {Promise<T>}
    */
+  update(p:{tableName: string, obj: any, column?: string, operator?: string, value?: any, ignore?: string[]}) {
+
+    if(p.ignore == undefined)
+      p.ignore = [];
+    if(p.operator == undefined)
+      p.operator = ' = ';
+
+    var query = " UPDATE " + p.tableName + " SET ";
+    var fields = ' ';
+    var params = [];
+    var where = ' WHERE ';
+    let i = 1;
+    for (const field in p.obj) {
+      if(!this.contains(p.ignore, field)){
+        if (i++ == 1) {
+          fields += "" + field + " = ? ";
+        }else{
+          fields += ", " + field + " = ? ";
+        }
+        params.push(p.obj[field]);
+      }
+    }
+    fields += '';
+    if(p.column != undefined && p.value != undefined){
+      where += ' ' + p.column + ' ' + p.operator + ' ' + p.value;
+    }
+    query += fields + ' ' + where;
+    console.log('query update : ', query);
+
+    return new Promise((resolve, reject) => {
+      this._db.transaction(function (tx) {
+        tx.executeSql(query, params, function (tx, data) {
+          resolve(data)
+        }, function (tx, error) {
+          reject(error)
+        });//executeSql
+      });//transaction
+    });//promise
+
+  }// update
+
+  /**
+   *
+   * @param p.tableName: name of table
+   * @param p.obj: object
+   * @param p.column: name of column
+   * @param p.operator: operator to use '=', '!=', '<', '<=' ...
+   * @param p.value: value to compare
+   * @param p.ignore: list attributes of object to ignore
+   * @returns {Promise<T>}
+   */
   updateOnly(p:{tableName: string, columns: string[], values: any[], column?: string, operator?: string, value?: any }) {
 
     if(p.operator == undefined)
