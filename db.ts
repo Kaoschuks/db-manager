@@ -418,6 +418,28 @@ export class DbProvider {
   }// deleteFiltred
 
 
+  /**
+   *
+   * @param p.tableName: name of table
+   * @param p.custom: custom clause where
+   * @returns {Promise<T>}
+   */
+  deleteCustom(p: {tableName: string, custom: string}) {
+
+    var query = "DELETE FROM " + p.tableName + " " + p.custom;
+    console.log('query deleteCustom : ',query);
+    return new Promise((resolve, reject) => {
+      this._db.transaction(function (tx) {
+        tx.executeSql(query, [], function (tx, data) {
+          resolve(data)
+        }, (tx, err) => {
+          reject(err)
+        });//executeSql
+      });//transaction
+    });//promise
+  }// deleteCustom
+
+
   /***************************** OTHERS *******************************/
   /**
    * Generic function to execute any query
