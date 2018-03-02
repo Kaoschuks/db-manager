@@ -368,6 +368,29 @@ export class DbProvider {
 
   }// updateCustom
 
+  
+  /***************************** DELETE *******************************/
+
+  /**
+   *
+   * @param p.tableName: name of table
+   * @returns {Promise<T>}
+   */
+  deleteAll(p: {tableName: string}) {
+
+    var query = "DELETE FROM " + p.tableName;
+    console.log('query deleteAll : ',query);
+    return new Promise((resolve, reject) => {
+      this._db.transaction(function (tx) {
+        tx.executeSql(query, [], function (tx, data) {
+          resolve(data)
+        }, (tx, err) => {
+          reject(err)
+        });//executeSql
+      });//transaction
+    });//promise
+  }// deletAll
+
   /***************************** OTHERS *******************************/
   /**
    * Generic function to execute any query
