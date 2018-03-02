@@ -368,7 +368,7 @@ export class DbProvider {
 
   }// updateCustom
 
-  
+
   /***************************** DELETE *******************************/
 
   /**
@@ -390,6 +390,33 @@ export class DbProvider {
       });//transaction
     });//promise
   }// deletAll
+
+  /**
+   *
+   * @param p.tableName: name of table
+   * @param p.custom: filter column
+   * @param p.operator: operator to use '=', '!=', '<', '<=' ...
+   * @param p.value: value to compare
+   * @returns {Promise<T>}
+   */
+  deleteFiltred(p: {tableName: string, column: string, operator?: string, value: any}) {
+    if(p.operator == undefined)
+      p.operator = ' = ';
+    var query = "DELETE FROM " + p.tableName +
+      " WHERE "+ p.column + " " + p.operator + " ?";
+
+    console.log('query delete Filtred : ',query);
+    return new Promise((resolve, reject) => {
+      this._db.transaction(function (tx) {
+        tx.executeSql(query, [p.value], function (tx, data) {
+          resolve(data)
+        }, (tx, err) => {
+          reject(err)
+        });//executeSql
+      });//transaction
+    });//promise
+  }// deleteFiltred
+
 
   /***************************** OTHERS *******************************/
   /**
