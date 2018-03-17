@@ -49,6 +49,28 @@ SELECT * FROM product WHERE WHERE price > 100 ORDER BY price DESC, name ASC;
 
 # 2 Insert
 
+#### 2-1 insert
+@Params
+  * tableName: string, 
+  * obj: any,
+  * ignore?: string[], 
+  
+@Return : Promise
+
+```javascript
+var myPerson = new Person();
+
+this.insert({tableName: 'person', obj: myPerson});
+```
+
+Similar query in SQL
+```sql
+INSERT INTO person 
+(firstName, lastName, birthday, birthplace, address, weight, married, nbrChild, job, hasCar) 
+VALUES ('Mohamed', 'Ali', '10/03/1959', 'Algeria', 'Algiers', '78', 'Y', '4', 'Officer', 'Y');
+```
+
+Here we can see the big difference to use SQL or DbManager provider for ionic framework
 # 3 Update
 
 # 4 Delete
