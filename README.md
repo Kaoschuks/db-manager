@@ -1,4 +1,5 @@
 # DB-manager
+Manage your SQLite database easily
 
 # Utils functions
 
@@ -8,17 +9,36 @@
 * patch : update tables (ALTER ...).
 
 # Available functions
-NB : '?' means Optional param
-* select
+NB : The symbol '?' means : Optional param
+# Select
+#### select
+@Params
   * tableName: string, 
   * columnSelected?: string, 
   * column?: string, 
   * operator?: string, 
   * value?: any, 
   * orderBy?: string
-* query
+  
+@Return : Promise
+  
+```javascript
+this.select({tableName: 'person', columnSelected: 'name, birthday', column: 'name', operator: 'like', value: 'a%', orderBy: 'birthday ASC'});
+```
+Similar query in SQL
+```sql
+SELECT name, birthday FROM person WHERE name LIKE 'a%' ORDER BY birthday ASC;
+```
 
-# How to use
+
+# Insert
+
+# Update
+
+# Delete
+
+
+# How to use ?
 ## Ionic 2 project
 
 1- Go in your project Ionic 2
