@@ -10,8 +10,8 @@ Manage your SQLite database easily
 
 # Available functions
 NB : The symbol '?' means : Optional param
-# Select
-#### select
+# 1 Select
+#### 1-1 select
 @Params
   * tableName: string, 
   * columnSelected?: string, 
@@ -31,12 +31,27 @@ SELECT name, birthday FROM person WHERE name LIKE 'a%' ORDER BY birthday ASC;
 ```
 
 
-# Insert
+#### 1-2 selectCustom
+@Params
+  * tableName: string, 
+  * customColumns?: string, default customColumns = '*'
+  * custom?: string, 
+  * orderBy?: string
+  
+@Return : Promise
+```javascript
+this.selectCustom({tableName: 'product', customColumns: '*', custom: 'WHERE price > 100', orderBy: 'price DESC, name ASC'});
+```
+Similar query in SQL
+```sql
+SELECT * FROM product WHERE WHERE price > 100 ORDER BY price DESC, name ASC;
+```
 
-# Update
+# 2 Insert
 
-# Delete
+# 3 Update
 
+# 4 Delete
 
 # How to use ?
 ## Ionic 2 project
