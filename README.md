@@ -25,7 +25,7 @@ NB : The symbol '?' means : Optional param
 ```javascript
 this.select({tableName: 'person', columnSelected: 'name, birthday', column: 'name', operator: 'like', value: 'a%', orderBy: 'birthday ASC'});
 ```
-Similar query in SQL
+Equivalent query in SQL
 ```sql
 SELECT name, birthday FROM person WHERE name LIKE 'a%' ORDER BY birthday ASC;
 ```
@@ -42,7 +42,7 @@ SELECT name, birthday FROM person WHERE name LIKE 'a%' ORDER BY birthday ASC;
 ```javascript
 this.selectCustom({tableName: 'product', customColumns: '*', custom: 'WHERE price > 100', orderBy: 'price DESC, name ASC'});
 ```
-Similar query in SQL
+Equivalent query in SQL
 ```sql
 SELECT * FROM product WHERE WHERE price > 100 ORDER BY price DESC, name ASC;
 ```
@@ -63,7 +63,7 @@ var myPerson = new Person();
 this.insert({tableName: 'person', obj: myPerson});
 ```
 
-Similar query in SQL
+Equivalent query in SQL
 ```sql
 INSERT INTO person 
 (firstName, lastName, birthday, birthplace, address, weight, married, nbrChild, job, hasCar) 
@@ -93,7 +93,50 @@ Insert my object only if there no one with name = 'myProdName' and constructor =
 
 # 4 Delete
 
-# How to use ?
+#### 4-1 deleteAll
+@Params
+  * tableName: string, 
+  
+@Return : Promise
+
+```javascript
+this.deleteAll({tableName: 'product'});
+```
+Delete all my products in product table without exception
+
+#### 4-2 deleteFiltred
+
+@Params
+  * tableName: string, 
+  * column: string,
+  * operator?: string, (optional) default : '='
+  * value: any,
+  
+@Return : Promise
+
+```javascript
+this.deleteFiltred({tableName: 'product', column: 'price', operator: '<', value: 125});
+```
+Equivalent query in SQL
+```sql
+DELETE FROM product WHERE price < 125;
+```
+#### 4-3 deleteCustom
+@Params
+  * tableName: string, 
+  * custom: string,
+  
+@Return : Promise
+```javascript
+var custom = "WHERE price < 125 AND name like 'a%'";
+this.deleteCustom({tableName: 'product', custom: custom});
+```
+Equivalent query in SQL
+```sql
+DELETE FROM product WHERE price < 125 AND name like 'a%';
+```
+
+# How to install ?
 ## Ionic 2 project
 
 1- Go in your project Ionic 2
