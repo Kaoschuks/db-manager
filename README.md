@@ -11,7 +11,7 @@ Manage your SQLite database easily
 # Available functions
 NB : The symbol '?' means : Optional param
 # 1 Select
-#### 1-1 select
+### 1-1 select
 @Params
   * tableName: string, 
   * columnSelected?: string, 
@@ -38,7 +38,7 @@ SELECT name, birthday FROM person WHERE name LIKE 'a%' ORDER BY birthday ASC;
 ```
 
 
-#### 1-2 selectCustom
+### 1-2 selectCustom
 @Params
   * tableName: string, 
   * customColumns?: string, default customColumns = '*'
@@ -61,7 +61,7 @@ SELECT * FROM product WHERE WHERE price > 100 ORDER BY price DESC, name ASC;
 
 # 2 Insert
 
-#### 2-1 insert
+### 2-1 insert
 @Params
   * tableName: string, 
   * obj: any,
@@ -84,7 +84,7 @@ VALUES ('Mohamed', 'Ali', '10/03/1959', 'Algeria', 'Algiers', '78', 'Y', '4', 'O
 
 It's very clear the big difference between DbManager and SQL native
 
-#### 2-2 insertIfNotExists
+### 2-2 insertIfNotExists
 @Params
   * tableName: string, 
   * obj: any,
@@ -107,10 +107,103 @@ this.insert({
 Insert my object only if there no one with name = 'myProdName' and constructor = 'myConstructor'
 
 # 3 Update
+### 3-1 update
+@Params
+  * tableName: string, 
+  * obj: any,
+  * column?: string,
+  * operator?: string,
+  * value?: any,
+  * ignore?: string[], 
+  
+@Return : Promise
+
+```javascript
+var myPerson = new Person();
+
+this.update({
+      tableName: 'person', 
+      obj: myPerson, 
+      column: 'firstName',
+      value: 'Mohamed',
+      ignore: ['firstName', 'lastName', 'birthday', 'birthplace']
+    });
+```
+Equivalent query in SQL
+```sql
+UPDATE person
+SET address = 'Algiers', weight = 82, married = 'Y', nbrChild = '5', job = 'Director', hasCar = 'N'
+WHERE firstName = 'Mohamed'
+```
+The attributes : 'firstName', 'lastName', 'birthday', 'birthplace' are ignored because we have set them in ignore array
+
+### 3-2 updateOnly
+
+Update only specified attributes.
+@Params
+  * tableName: string, 
+  * columns: string[],
+  * values: any[],
+  * column?: string,
+  * operator?: string,
+  * value?: any,
+  
+@Return : Promise
+
+```javascript
+var myPerson = new Person();
+
+this.updateOnly({
+      tableName: 'person', 
+      columns: ['address', 'weight', 'hasCar'], 
+      values: [myPerson.address, myPerson.weight, myPerson.hasCar],
+      column: 'firstName',
+      operator: '=',
+      value: 'Mohamed'
+    });
+```
+
+Equivalent query in SQL
+```sql
+UPDATE person
+SET address = 'Algiers', weight = 82, hasCar = 'Y'
+WHERE firstName = 'Mohamed'
+```
+
+### 3-3 updateCustom
+
+Customized update query.
+@Params
+  * tableName: string, 
+  * obj: any,
+  * customWhere: string,
+  * ignore?: string[],
+  
+@Return : Promise
+
+```javascript
+var myPerson = new Person();
+var custom = "WHERE firstName = 'Mohamed' AND lastName='Ali' AND hasCar = 'Y' ";
+this.update({
+      tableName: 'person', 
+      obj: myPerson, 
+      customWhere: custom,
+      ignore: ['firstName', 'lastName']
+    });
+```
+
+Equivalent query in SQL
+```sql
+UPDATE person
+SET address = 'Algiers', weight = 82, married = 'Y', nbrChild = '5', job = 'Director', hasCar = 'N'
+birthday = '10/03/1959', birthplace = 'Algeria', 
+WHERE firstName = 'Mohamed' AND lastName='Ali' AND hasCar = 'Y'
+```
+
 
 # 4 Delete
 
-#### 4-1 deleteAll
+### 4-1 deleteAll
 @Params
   * tableName: string, 
   
@@ -121,7 +214,7 @@ this.deleteAll({tableName: 'product'});
 ```
 Delete all my products in product table without exception
 
-#### 4-2 deleteFiltred
+### 4-2 deleteFiltred
 
 @Params
   * tableName: string, 
@@ -143,7 +236,7 @@ Equivalent query in SQL
 ```sql
 DELETE FROM product WHERE price < 125;
 ```
-#### 4-3 deleteCustom
+### 4-3 deleteCustom
 @Params
   * tableName: string, 
   * custom: string,
