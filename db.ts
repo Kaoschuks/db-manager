@@ -209,7 +209,7 @@ export class DbProvider {
     params.push(p.colsVal[j]);
     query += fields + values + where;
 
-    console.log('query insertIfNotExists2 : ', query);
+    console.log('query insertIfNotExists : ', query);
 
     return new Promise((resolve, reject) => {
       this._db.transaction(function (tx) {

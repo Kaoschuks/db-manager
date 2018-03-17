@@ -70,7 +70,25 @@ INSERT INTO person
 VALUES ('Mohamed', 'Ali', '10/03/1959', 'Algeria', 'Algiers', '78', 'Y', '4', 'Officer', 'Y');
 ```
 
-Here we can see the big difference to use SQL or DbManager provider for ionic framework
+It's very clear the big difference between DbManager and SQL native
+
+#### 2-2 insertIfNotExists
+@Params
+  * tableName: string, 
+  * obj: any,
+  * colsRef: string[],
+  * colsVal: any[],
+  * ignore?: string[], 
+  
+@Return : Promise
+
+```javascript
+var myProduct = new Product();
+
+this.insert({tableName: 'product', obj: myProduct, colsRef: ['name', 'constructor'], colsVal: ['myProdName', 'myConstructor']});
+```
+Insert my object only if there no one with name = 'myProdName' and constructor = 'myConstructor'
+
 # 3 Update
 
 # 4 Delete
