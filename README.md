@@ -23,7 +23,14 @@ NB : The symbol '?' means : Optional param
 @Return : Promise
   
 ```javascript
-this.select({tableName: 'person', columnSelected: 'name, birthday', column: 'name', operator: 'like', value: 'a%', orderBy: 'birthday ASC'});
+this.select({
+      tableName: 'person', 
+      columnSelected: 'name, birthday', 
+      column: 'name', 
+      operator: 'like', 
+      value: 'a%', 
+      orderBy: 'birthday ASC'
+    });
 ```
 Equivalent query in SQL
 ```sql
@@ -40,7 +47,12 @@ SELECT name, birthday FROM person WHERE name LIKE 'a%' ORDER BY birthday ASC;
   
 @Return : Promise
 ```javascript
-this.selectCustom({tableName: 'product', customColumns: '*', custom: 'WHERE price > 100', orderBy: 'price DESC, name ASC'});
+this.selectCustom({
+      tableName: 'product', 
+      customColumns: '*', 
+      custom: 'WHERE price > 100', 
+      orderBy: 'price DESC, name ASC'
+    });
 ```
 Equivalent query in SQL
 ```sql
@@ -85,7 +97,12 @@ It's very clear the big difference between DbManager and SQL native
 ```javascript
 var myProduct = new Product();
 
-this.insert({tableName: 'product', obj: myProduct, colsRef: ['name', 'constructor'], colsVal: ['myProdName', 'myConstructor']});
+this.insert({
+      tableName: 'product', 
+      obj: myProduct, 
+      colsRef: ['name', 'constructor'],
+      colsVal: ['myProdName', 'myConstructor']
+    });
 ```
 Insert my object only if there no one with name = 'myProdName' and constructor = 'myConstructor'
 
@@ -115,7 +132,12 @@ Delete all my products in product table without exception
 @Return : Promise
 
 ```javascript
-this.deleteFiltred({tableName: 'product', column: 'price', operator: '<', value: 125});
+this.deleteFiltred({
+      tableName: 'product', 
+      column: 'price', 
+      operator: '<', 
+      value: 125
+    });
 ```
 Equivalent query in SQL
 ```sql
