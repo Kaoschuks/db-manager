@@ -170,9 +170,9 @@ export class DbProvider {
    *
    * @param p.tableName: name of table
    * @param p.obj: object
-   * @param p.colRef: name of columns to verify if not exists
-   * @param p.colVal: values of columns to verify if not exists
-   * @param p.ignore: ignored attributes
+   * @param p.colsRef: names of columns to verify if not exists
+   * @param p.colsVal: values of columns to verify if not exists
+   * @param p.ignore: list attributes of object to ignore
    * @returns {Promise<T>}
    */
   insertIfNotExists(p: {tableName: string, obj: any, colsRef: string[], colsVal: any[], ignore?: string[]}) {
@@ -202,10 +202,13 @@ export class DbProvider {
     where += 'WHERE NOT EXISTS (SELECT 1 FROM ' + p.tableName + ' WHERE ';
     let j = 0;
     for (j = 0; j < (p.colsRef.length - 1); j++) {
-      where +=  p.colsRef[j] +' = ? AND ';
+      if(p.colsVal[j] == null) where +=  p.colsRef[j] +' is ? AND ';
+      else where +=  p.colsRef[j] +' = ? AND ';
       params.push(p.colsVal[j]);
     }
-    where += p.colsRef[j] +' = ?)';
+
+    if(p.colsVal[j] == null) where += p.colsRef[j] +' is ?)';
+    else where += p.colsRef[j] +' = ?)';
     params.push(p.colsVal[j]);
     query += fields + values + where;
 
