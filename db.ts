@@ -6,6 +6,7 @@ export class DbService {
   private _db: any;
   private _win: any = window;
   private _db_name: string = 'my_db';
+  private _debug: boolean = false;
 
   constructor() {
     console.log('Hello DbProvider Provider');
@@ -51,7 +52,7 @@ export class DbService {
     if(p.orderBy != undefined)
       query += ' ORDER BY ' + p.orderBy;
 
-    console.log('query selectFiltred : ',query);
+    if(this._debug) console.log('query selectFiltred : ',query);
 
     return new Promise((resolve, reject) => {
       this._db.transaction(function (tx) {
@@ -91,7 +92,7 @@ export class DbService {
     if(p.orderBy != undefined)
       query += ' ORDER BY ' + p.orderBy;
 
-    console.log('query selectFiltred : ',query);
+    if(this._debug) console.log('query selectFiltred : ',query);
     return new Promise((resolve, reject) => {
       this._db.transaction(function (tx) {
         tx.executeSql(query, [], function (tx, data) {
@@ -145,7 +146,7 @@ export class DbService {
     fields += ')';
     values += ')';
     query += fields + ' VALUES' + values;
-    console.log('query: ', query);
+    if(this._debug) console.log('query: ', query);
 
     return new Promise((resolve, reject) => {
       this._db.transaction(function (tx) {
@@ -206,7 +207,7 @@ export class DbService {
     params.push(p.colsVal[j]);
     query += fields + values + where;
 
-    console.log('query insertIfNotExists : ', query);
+    if(this._debug) console.log('query insertIfNotExists : ', query);
 
     return new Promise((resolve, reject) => {
       this._db.transaction(function (tx) {
@@ -259,7 +260,7 @@ export class DbService {
       where += ' ' + p.column + ' ' + p.operator + ' ' + p.value;
     }
     query += fields + ' ' + where;
-    console.log('query update : ', query);
+    if(this._debug) console.log('query update : ', query);
 
     return new Promise((resolve, reject) => {
       this._db.transaction(function (tx) {
@@ -308,7 +309,7 @@ export class DbService {
       where += ' WHERE ' + p.column + ' ' + p.operator + ' ' + p.value;
     }
     query += fields + ' ' + where;
-    console.log('query update only : ', query);
+    if(this._debug) console.log('query update only : ', query);
 
     return new Promise((resolve, reject) => {
       this._db.transaction(function (tx) {
@@ -351,7 +352,7 @@ export class DbService {
     fields += '';
 
     query += fields + ' ' + p.customWhere;
-    console.log('query updateCustom : ', query);
+    if(this._debug) console.log('query updateCustom : ', query);
 
     return new Promise((resolve, reject) => {
       this._db.transaction(function (tx) {
@@ -376,7 +377,7 @@ export class DbService {
   deleteAll(p: {tableName: string}) {
 
     var query = "DELETE FROM " + p.tableName;
-    console.log('query deleteAll : ',query);
+    if(this._debug) console.log('query deleteAll : ',query);
     return new Promise((resolve, reject) => {
       this._db.transaction(function (tx) {
         tx.executeSql(query, [], function (tx, data) {
@@ -402,7 +403,7 @@ export class DbService {
     var query = "DELETE FROM " + p.tableName +
       " WHERE "+ p.column + " " + p.operator + " ?";
 
-    console.log('query delete Filtred : ',query);
+    if(this._debug) console.log('query delete Filtred : ',query);
     return new Promise((resolve, reject) => {
       this._db.transaction(function (tx) {
         tx.executeSql(query, [p.value], function (tx, data) {
@@ -424,7 +425,7 @@ export class DbService {
   deleteCustom(p: {tableName: string, custom: string}) {
 
     var query = "DELETE FROM " + p.tableName + " " + p.custom;
-    console.log('query deleteCustom : ',query);
+    if(this._debug) console.log('query deleteCustom : ',query);
     return new Promise((resolve, reject) => {
       this._db.transaction(function (tx) {
         tx.executeSql(query, [], function (tx, data) {
