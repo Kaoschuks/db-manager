@@ -1,13 +1,7 @@
 import { Injectable } from '@angular/core';
 
-/*
-  Generated class for the DbProvider provider.
-
-  See https://angular.io/guide/dependency-injection for more info on providers
-  and Angular DI.
-*/
 @Injectable()
-export class DbProvider {
+export class DbService {
 
   private _db: any;
   private _win: any = window;
