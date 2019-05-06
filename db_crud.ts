@@ -97,6 +97,45 @@ export class DbCrud extends DbConf{
 
 
   /**
+   *
+   * @param p.tableName: name of table
+   * @param p.columnsSelected: list column to select
+   * @param p.column: name of column
+   * @param p.value: value to compare
+   * @returns {Promise<T>}
+   */
+  selectById(p: { tableName: string, column: string, value: any, columnsSelected?: string }): Promise<any> {
+    var params = [];
+    if (p.columnsSelected == undefined)
+      p.columnsSelected = '*';
+    var query = "SELECT " + p.columnsSelected + " FROM " + p.tableName + " ";
+
+    query += " WHERE " + p.column + " = ? ";
+    params.push(p.value);
+
+
+    if (this._debug) console.log('query selectById : ', query);
+
+    return new Promise((resolve, reject) => {
+      this._db.transaction(function (tx) {
+        tx.executeSql(query, params, function (tx, data) {
+          let item: Object;
+          let res: Object[] = [];
+
+          if (data.rows.length > 0)
+            resolve(data.rows[0]);
+          else
+            resolve(null);
+
+        }, function (tx, error) {
+          reject(error);
+        });
+      });
+    });
+  }// selectById
+
+
+  /**
    * Generic select query
    * @param query
    * @param params
