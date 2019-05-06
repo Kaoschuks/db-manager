@@ -358,7 +358,8 @@ export class DbCrud extends DbConf{
     }
     fields += '';
     if(p.column != undefined && p.value != undefined){
-      where += ' WHERE ' + p.column + ' ' + p.operator + ' ' + p.value;
+      where += ' WHERE ' + p.column + ' ' + p.operator + ' ' + ' ? ';
+      params.push(p.value);
     }
     query += fields + ' ' + where;
     if(this._debug) console.log('query update only : ', query);
