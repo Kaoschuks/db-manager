@@ -96,6 +96,36 @@ export class DbCrud extends DbConf{
   }// selectCustom
 
 
+  /**
+   * Generic select query
+   * @param query
+   * @param params
+   * @returns {Promise<T>}
+   */
+  selectQuery(query: string, params: any[] = []): Promise<any> {
+
+    if (this._debug) console.log('query selectQuery : ', query);
+
+    return new Promise((resolve, reject) => {
+      this._db.transaction(function (tx) {
+        tx.executeSql(query, params, function (tx, data) {
+          let item: Object;
+          let res: Object[] = [];
+
+          for (var i = 0; i < data.rows.length; i++) {
+            item = data.rows.item(i);
+            res.push(item);
+          }
+
+          resolve(res);
+        }, function (tx, error) {
+          reject(error);
+        });
+      });
+    });
+  }// selectQuery
+
+
   /***************************** INSERT *******************************/
 
   /**
